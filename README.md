@@ -1,14 +1,26 @@
-# API Node.js
+# API Node.js com Express.js
 
-API simples em Node.js com Express e um único endpoint GET.
+API RESTful com estrutura MVC, usando Express.js, CORS e tratamento de erros global.
 
-## Instalação
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── controllers/     # Lógica de negócio
+├── models/         # Modelos de dados
+├── routes/         # Definição de rotas
+├── middleware/     # Middlewares (CORS, tratamento de erros)
+└── utils/          # Utilitários
+index.js           # Arquivo principal
+```
+
+## 📦 Instalação
 
 ```bash
 npm install
 ```
 
-## Execução
+## 🚀 Execução
 
 ```bash
 # Modo produção
@@ -18,24 +30,58 @@ npm start
 npm run dev
 ```
 
-## Endpoints
+## 🔌 Endpoints
 
-### GET /api/dados
+### Info da API
+- **GET** `/api/info` - Informações da API
+- **GET** `/api/health` - Status da API
 
-Retorna dados em JSON.
+### Dados (CRUD)
+- **GET** `/api/dados` - Listar todos os dados
+- **GET** `/api/dados/:id` - Obter um dado por ID
+- **POST** `/api/dados` - Criar novo dado
+- **PUT** `/api/dados/:id` - Atualizar um dado
+- **DELETE** `/api/dados/:id` - Remover um dado
 
-**Resposta:**
-```json
-{
-  "mensagem": "Bem-vindo à API!",
-  "timestamp": "2026-02-02T10:30:00.000Z",
-  "dados": {
-    "exemplo": "Isso é um exemplo de resposta"
-  }
-}
-```
+## 📝 Exemplos de Uso
 
-**Teste:**
+### GET - Listar todos
 ```bash
 curl http://localhost:3000/api/dados
 ```
+
+### GET - Por ID
+```bash
+curl http://localhost:3000/api/dados/1
+```
+
+### POST - Criar
+```bash
+curl -X POST http://localhost:3000/api/dados \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"Novo Item","descricao":"Descrição"}'
+```
+
+### PUT - Atualizar
+```bash
+curl -X PUT http://localhost:3000/api/dados/1 \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"Item Atualizado","descricao":"Nova descrição"}'
+```
+
+### DELETE - Remover
+```bash
+curl -X DELETE http://localhost:3000/api/dados/1
+```
+
+## ✨ Recursos
+
+✅ Estrutura MVC  
+✅ CRUD completo  
+✅ CORS habilitado  
+✅ Tratamento de erros global  
+✅ Validação de dados  
+✅ Logging de requisições  
+✅ Health check  
+✅ Resposta padronizada em JSON
+
