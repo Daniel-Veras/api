@@ -1,14 +1,15 @@
-const DataModel = require('../models/DataModel');
+const GetAllDataUseCase = require('../usecases/GetAllDataUseCase');
+const GetDataByIdUseCase = require('../usecases/GetDataByIdUseCase');
+const CreateDataUseCase = require('../usecases/CreateDataUseCase');
+const UpdateDataUseCase = require('../usecases/UpdateDataUseCase');
+const DeleteDataUseCase = require('../usecases/DeleteDataUseCase');
 
 class DataController {
   // GET todos os dados
   static getAll(req, res, next) {
     try {
-      const dados = DataModel.getAll();
-      res.json({
-        sucesso: true,
-        data: dados
-      });
+      const resultado = GetAllDataUseCase.execute();
+      res.json(resultado);
     } catch (err) {
       next(err);
     }
@@ -18,20 +19,15 @@ class DataController {
   static getById(req, res, next) {
     try {
       const { id } = req.params;
-      const dado = DataModel.getById(id);
-
-      if (!dado) {
+      const resultado = GetDataByIdUseCase.execute(id);
+      res.json(resultado);
+    } catch (err) {
+      if (err.status === 404) {
         return res.status(404).json({
           sucesso: false,
-          mensagem: 'Item não encontrado'
+          mensagem: err.message
         });
       }
-
-      res.json({
-        sucesso: true,
-        data: dado
-      });
-    } catch (err) {
       next(err);
     }
   }
@@ -40,21 +36,15 @@ class DataController {
   static create(req, res, next) {
     try {
       const { nome, descricao } = req.body;
-
-      if (!nome) {
+      const resultado = CreateDataUseCase.execute(nome, descricao);
+      res.status(201).json(resultado);
+    } catch (err) {
+      if (err.status === 400) {
         return res.status(400).json({
           sucesso: false,
-          mensagem: 'Nome é obrigatório'
+          mensagem: err.message
         });
       }
-
-      const novoItem = DataModel.create(nome, descricao || '');
-      res.status(201).json({
-        sucesso: true,
-        data: novoItem,
-        mensagem: 'Item criado com sucesso'
-      });
-    } catch (err) {
       next(err);
     }
   }
@@ -64,29 +54,21 @@ class DataController {
     try {
       const { id } = req.params;
       const { nome, descricao } = req.body;
-
-      if (!nome) {
+      const resultado = UpdateDataUseCase.execute(id, nome, descricao);
+      res.json(resultado);
+    } catch (err) {
+      if (err.status === 400) {
         return res.status(400).json({
           sucesso: false,
-          mensagem: 'Nome é obrigatório'
+          mensagem: err.message
         });
       }
-
-      const itemAtualizado = DataModel.update(id, nome, descricao || '');
-
-      if (!itemAtualizado) {
+      if (err.status === 404) {
         return res.status(404).json({
           sucesso: false,
-          mensagem: 'Item não encontrado'
+          mensagem: err.message
         });
       }
-
-      res.json({
-        sucesso: true,
-        data: itemAtualizado,
-        mensagem: 'Item atualizado com sucesso'
-      });
-    } catch (err) {
       next(err);
     }
   }
@@ -95,21 +77,21 @@ class DataController {
   static delete(req, res, next) {
     try {
       const { id } = req.params;
-      const itemRemovido = DataModel.delete(id);
-
-      if (!itemRemovido) {
-        return res.status(404).json({
+      const resultado = DeleteDataUseCase.execute(id);
+      res.json(resultado);
+    } catch (err) {
+      if (err.status === 400) {
+        return res.status(400).json({
           sucesso: false,
-          mensagem: 'Item não encontrado'
+          mensagem: err.message
         });
       }
-
-      res.json({
-        sucesso: true,
-        data: itemRemovido,
-        mensagem: 'Item removido com sucesso'
-      });
-    } catch (err) {
+      if (err.status === 404) {
+        return res.status(404).json({
+          sucesso: false,
+          mensagem: err.message
+        });
+      }
       next(err);
     }
   }
