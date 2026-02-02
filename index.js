@@ -1,4 +1,5 @@
 const express = require('express');
+require('./src/database/connection'); // Importar para testar conexão
 const { errorHandler, corsMiddleware } = require('./src/middleware/errorHandler');
 const apiRoutes = require('./src/routes/apiRoutes');
 const dataRoutes = require('./src/routes/dataRoutes');
