@@ -1,9 +1,9 @@
-const DataModel = require('../models/DataModel');
+const DataService = require('../services/database/DataService');
 
 class GetAllDataUseCase {
-  execute() {
+  async execute() {
     try {
-      const dados = DataModel.getAll();
+      const dados = await DataService.getAll();
       return {
         sucesso: true,
         data: dados

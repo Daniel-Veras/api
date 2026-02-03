@@ -6,9 +6,9 @@ const DeleteDataUseCase = require('../usecases/DeleteDataUseCase');
 
 class DataController {
   // GET todos os dados
-  static getAll(req, res, next) {
+  static async getAll(req, res, next) {
     try {
-      const resultado = GetAllDataUseCase.execute();
+      const resultado = await GetAllDataUseCase.execute();
       res.json(resultado);
     } catch (err) {
       next(err);
@@ -16,10 +16,10 @@ class DataController {
   }
 
   // GET um dado por ID
-  static getById(req, res, next) {
+  static async getById(req, res, next) {
     try {
       const { id } = req.params;
-      const resultado = GetDataByIdUseCase.execute(id);
+      const resultado = await GetDataByIdUseCase.execute(id);
       res.json(resultado);
     } catch (err) {
       if (err.status === 404) {
@@ -33,10 +33,10 @@ class DataController {
   }
 
   // POST criar novo dado
-  static create(req, res, next) {
+  static async create(req, res, next) {
     try {
       const { nome, descricao } = req.body;
-      const resultado = CreateDataUseCase.execute(nome, descricao);
+      const resultado = await CreateDataUseCase.execute(nome, descricao);
       res.status(201).json(resultado);
     } catch (err) {
       if (err.status === 400) {
@@ -50,11 +50,11 @@ class DataController {
   }
 
   // PUT atualizar dado
-  static update(req, res, next) {
+  static async update(req, res, next) {
     try {
       const { id } = req.params;
       const { nome, descricao } = req.body;
-      const resultado = UpdateDataUseCase.execute(id, nome, descricao);
+      const resultado = await UpdateDataUseCase.execute(id, nome, descricao);
       res.json(resultado);
     } catch (err) {
       if (err.status === 400) {
@@ -74,10 +74,10 @@ class DataController {
   }
 
   // DELETE remover dado
-  static delete(req, res, next) {
+  static async delete(req, res, next) {
     try {
       const { id } = req.params;
-      const resultado = DeleteDataUseCase.execute(id);
+      const resultado = await DeleteDataUseCase.execute(id);
       res.json(resultado);
     } catch (err) {
       if (err.status === 400) {

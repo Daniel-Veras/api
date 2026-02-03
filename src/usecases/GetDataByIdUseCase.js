@@ -1,13 +1,13 @@
-const DataModel = require('../models/DataModel');
+const DataService = require('../services/database/DataService');
 
 class GetDataByIdUseCase {
-  execute(id) {
+  async execute(id) {
     try {
       if (!id) {
         throw new Error('ID é obrigatório');
       }
 
-      const dado = DataModel.getById(id);
+      const dado = await DataService.getById(id);
 
       if (!dado) {
         throw {

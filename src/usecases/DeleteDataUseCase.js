@@ -1,7 +1,7 @@
-const DataModel = require('../models/DataModel');
+const DataService = require('../services/database/DataService');
 
 class DeleteDataUseCase {
-  execute(id) {
+  async execute(id) {
     try {
       if (!id) {
         throw {
@@ -10,7 +10,7 @@ class DeleteDataUseCase {
         };
       }
 
-      const itemRemovido = DataModel.delete(id);
+      const itemRemovido = await DataService.delete(id);
 
       if (!itemRemovido) {
         throw {

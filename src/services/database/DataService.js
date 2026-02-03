@@ -1,6 +1,6 @@
-const pool = require('../database/connection');
+const pool = require('../../database/connection');
 
-class DataRepository {
+class DataService {
   // Buscar todos os dados
   static async getAll() {
     try {
@@ -61,4 +61,4 @@ class DataRepository {
   }
 }
 
-module.exports = DataRepository;
+module.exports = DataService;

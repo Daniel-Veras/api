@@ -2,6 +2,7 @@ const express = require('express');
 require('./src/database/connection'); // Importar para testar conexão
 const { errorHandler, corsMiddleware } = require('./src/middleware/errorHandler');
 const apiRoutes = require('./src/routes/apiRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 const dataRoutes = require('./src/routes/dataRoutes');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 
 // Rotas
 app.use('/api', apiRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/dados', dataRoutes);
 
 // Rota raiz

@@ -1,7 +1,7 @@
-const DataModel = require('../models/DataModel');
+const DataService = require('../services/database/DataService');
 
 class CreateDataUseCase {
-  execute(nome, descricao) {
+  async execute(nome, descricao) {
     try {
       if (!nome) {
         throw {
@@ -10,7 +10,7 @@ class CreateDataUseCase {
         };
       }
 
-      const novoItem = DataModel.create(nome, descricao || '');
+      const novoItem = await DataService.create(nome, descricao || '');
       
       return {
         sucesso: true,

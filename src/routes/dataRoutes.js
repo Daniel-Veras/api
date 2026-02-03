@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
 const DataController = require('../controllers/DataController');
+
+// Todas as rotas de dados requerem autenticação
+router.use(authMiddleware);
 
 // GET todos os dados
 router.get('/', DataController.getAll);

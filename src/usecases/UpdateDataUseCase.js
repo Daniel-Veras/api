@@ -1,7 +1,7 @@
-const DataModel = require('../models/DataModel');
+const DataService = require('../services/database/DataService');
 
 class UpdateDataUseCase {
-  execute(id, nome, descricao) {
+  async execute(id, nome, descricao) {
     try {
       if (!id) {
         throw {
@@ -17,7 +17,7 @@ class UpdateDataUseCase {
         };
       }
 
-      const itemAtualizado = DataModel.update(id, nome, descricao || '');
+      const itemAtualizado = await DataService.update(id, nome, descricao || '');
 
       if (!itemAtualizado) {
         throw {
