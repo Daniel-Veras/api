@@ -1,17 +1,24 @@
--- Executar como postgres (superusuário)
--- psql -h localhost -U postgres -d banco -f setup.sql
+
+
+-- Criar usuário daniel (se não existir)
+DO
+$$
+BEGIN
+   IF NOT EXISTS (
+      SELECT FROM pg_roles WHERE rolname = 'daniel'
+   ) THEN
+      CREATE ROLE daniel LOGIN PASSWORD '0099abc';
+   END IF;
+END
+$$;
 
 -- Dar permissões ao usuário daniel
 GRANT USAGE ON SCHEMA public TO daniel;
 GRANT CREATE ON SCHEMA public TO daniel;
 
--- Dar permissões padrão para futuras tabelas
+-- Permissões padrão para futuras tabelas e sequências
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO daniel;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO daniel;
-
--- Dar permissões nas tabelas existentes
-GRANT ALL ON ALL TABLES IN SCHEMA public TO daniel;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO daniel;
 
 -- Criar tabela de dados
 CREATE TABLE IF NOT EXISTS dados (

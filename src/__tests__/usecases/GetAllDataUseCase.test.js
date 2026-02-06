@@ -1,40 +1,48 @@
-const GetAllDataUseCase = require('../../usecases/GetAllDataUseCase');
-const DataModel = require('../../models/DataModel');
+// Mock da conexão antes de importar qualquer coisa que use banco
+jest.mock('../../database/connection');
 
-// Mock do DataModel
-jest.mock('../../models/DataModel');
+const GetAllDataUseCase = require('../../usecases/GetAllDataUseCase');
+const DataService = require('../../services/database/DataService');
+
+// Mock do DataService
+jest.mock('../../services/database/DataService');
 
 describe('GetAllDataUseCase', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test('deve retornar sucesso com todos os dados', () => {
+  afterAll(async () => {
+    // Limpar conexões abertas
+    jest.resetModules();
+  });
+
+  test('deve retornar sucesso com todos os dados', async () => {
     // Arrange
     const dadosMock = [
       { id: 1, nome: 'Item 1', descricao: 'Descrição 1' },
       { id: 2, nome: 'Item 2', descricao: 'Descrição 2' }
     ];
-    DataModel.getAll.mockReturnValue(dadosMock);
+    DataService.getAll.mockResolvedValue(dadosMock);
 
     // Act
-    const resultado = GetAllDataUseCase.execute();
+    const resultado = await GetAllDataUseCase.execute();
 
     // Assert
     expect(resultado).toEqual({
       sucesso: true,
       data: dadosMock
     });
-    expect(DataModel.getAll).toHaveBeenCalled();
+    expect(DataService.getAll).toHaveBeenCalled();
     expect(resultado.data).toHaveLength(2);
   });
 
-  test('deve retornar array vazio quando não houver dados', () => {
+  test('deve retornar array vazio quando não houver dados', async () => {
     // Arrange
-    DataModel.getAll.mockReturnValue([]);
+    DataService.getAll.mockResolvedValue([]);
 
     // Act
-    const resultado = GetAllDataUseCase.execute();
+    const resultado = await GetAllDataUseCase.execute();
 
     // Assert
     expect(resultado.sucesso).toBe(true);
@@ -42,26 +50,22 @@ describe('GetAllDataUseCase', () => {
     expect(resultado.data).toHaveLength(0);
   });
 
-  test('deve lançar erro quando DataModel falhar', () => {
+  test('deve lançar erro quando DataService falhar', async () => {
     // Arrange
-    DataModel.getAll.mockImplementation(() => {
-      throw new Error('Erro na base de dados');
-    });
+    DataService.getAll.mockRejectedValue(new Error('Erro na base de dados'));
 
     // Act & Assert
-    expect(() => {
-      GetAllDataUseCase.execute();
-    }).toThrow('Erro ao buscar dados: Erro na base de dados');
+    await expect(GetAllDataUseCase.execute()).rejects.toThrow('Erro ao buscar dados: Erro na base de dados');
   });
 
-  test('deve chamar DataModel.getAll uma única vez', () => {
+  test('deve chamar DataService.getAll uma única vez', async () => {
     // Arrange
-    DataModel.getAll.mockReturnValue([]);
+    DataService.getAll.mockResolvedValue([]);
 
     // Act
-    GetAllDataUseCase.execute();
+    await GetAllDataUseCase.execute();
 
     // Assert
-    expect(DataModel.getAll).toHaveBeenCalledTimes(1);
+    expect(DataService.getAll).toHaveBeenCalledTimes(1);
   });
 });

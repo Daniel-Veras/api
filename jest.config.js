@@ -6,5 +6,7 @@ module.exports = {
     '!src/**/index.js'
   ],
   testPathIgnorePatterns: ['/node_modules/'],
-  verbose: true
+  verbose: true,
+  forceExit: true,
+  detectOpenHandles: false
 };
